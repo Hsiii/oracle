@@ -7,9 +7,15 @@ APPS_ROOT="${APPS_ROOT:-"$ORACLE_ROOT/../apps"}"
 COMPOSE_FILE="${COMPOSE_FILE:-"$ORACLE_ROOT/compose.yaml"}"
 NETWORK_NAME="${NETWORK_NAME:-bots_shared}"
 
+if docker info >/dev/null 2>&1; then
+  DOCKER=(docker)
+else
+  DOCKER=(sudo -n docker)
+fi
+
 ensure_docker_network() {
-  if ! docker network inspect "$NETWORK_NAME" >/dev/null 2>&1; then
-    docker network create "$NETWORK_NAME" >/dev/null
+  if ! "${DOCKER[@]}" network inspect "$NETWORK_NAME" >/dev/null 2>&1; then
+    "${DOCKER[@]}" network create "$NETWORK_NAME" >/dev/null
   fi
 }
 
@@ -25,9 +31,9 @@ pull_repo() {
 }
 
 compose_up() {
-  docker compose -f "$COMPOSE_FILE" up -d --build "$@"
+  "${DOCKER[@]}" compose -f "$COMPOSE_FILE" up -d --build "$@"
 }
 
 compose_ps() {
-  docker compose -f "$COMPOSE_FILE" ps
+  "${DOCKER[@]}" compose -f "$COMPOSE_FILE" ps
 }
