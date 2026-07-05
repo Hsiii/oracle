@@ -36,6 +36,8 @@ services:
   morning-dashboard:
     build:
       context: ../apps/morning
+      args:
+        INSTALL_PLAYWRIGHT_BROWSERS: "false"
     restart: unless-stopped
     cpus: 0.5
     mem_limit: 768m
@@ -69,12 +71,17 @@ networks:
 
 volumes:
   caddy-data:
+    external: true
     name: proxy_caddy-data
   caddy-config:
+    external: true
     name: proxy_caddy-config
   wm31bot-state:
+    external: true
     name: wm31bot_wm31bot-state
   morning-dashboard-state:
+    external: true
     name: morning_morning-dashboard-state
   recipe-site-uploads:
+    external: true
     name: recipe_recipe-site-uploads
