@@ -62,8 +62,9 @@ runs `scripts/claim-brawlstars-reward` every day at `09:00 UTC`, which is
 `17:00 GMT+8`.
 
 The claim script runs the one-shot Playwright command inside the
-`brawl-stars-claimer` container. It reuses the saved Playwright auth state from
-the mounted state volume and logs cron output to
+`brawl-stars-claimer` container. It claims every profile configured in
+`BRAWL_STARS_CLAIMER_PROFILES`, reusing each profile's saved Playwright auth
+state from the mounted state volume, and logs cron output to
 `/home/ubuntu/bots/logs/brawlstars-claim.log`.
 
 Run these from the VM:
