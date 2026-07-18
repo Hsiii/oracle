@@ -12,4 +12,4 @@ fi
 
 "${DOCKER[@]}" compose -f "$COMPOSE_FILE" exec -T \
   brawl-stars-claimer \
-  bun src/server.ts --claim-once "$@"
+  xvfb-run -a bun src/server.ts --claim-once "$@"
