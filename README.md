@@ -95,6 +95,16 @@ The health watcher finds managed containers using the
 `dev.hsichen.platform.managed=true` label, so it works across independent
 Compose projects.
 
+## Host Access
+
+Run `scripts/install-ssh-hardening` to install the versioned sshd policy. It
+disables root login and X11 forwarding, allows only the `ubuntu` account, and
+limits authentication attempts to three. The installer validates the complete
+sshd configuration before reloading the service.
+
+Keep TCP 22 restricted in the OCI security list to trusted source addresses or
+a private access network. TCP 80 and 443 remain public for Caddy.
+
 ## Secrets
 
 Create production files from `env/*.env.example` under

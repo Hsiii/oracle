@@ -18,6 +18,7 @@
     "verify:postgres-backup": "ssh platform /srv/platform/jobs/postgres/verify-backup",
     "install:postgres-backups": "ssh platform /srv/platform/operations/scripts/install-postgres-backup-timers",
     "install:health-watch": "ssh platform /srv/platform/operations/scripts/install-health-watch-timer",
+    "install:ssh-hardening": "ssh platform /srv/platform/operations/scripts/install-ssh-hardening",
     "status": "ssh platform /srv/platform/operations/scripts/status"
   }
 }

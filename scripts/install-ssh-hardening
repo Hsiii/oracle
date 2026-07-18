@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
+if [ "$(id -u)" -eq 0 ]; then
+  SUDO=()
+else
+  SUDO=(sudo -n)
+fi
+
+target=/etc/ssh/sshd_config.d/90-platform-hardening.conf
+temporary="$(mktemp)"
+previous="$(mktemp)"
+had_previous=false
+
+cleanup() {
+  rm -f "$temporary" "$previous"
+}
+trap cleanup EXIT
+
+install -m 0644 "$OPERATIONS_ROOT/security/sshd-platform.conf" "$temporary"
+if "${SUDO[@]}" test -f "$target"; then
+  "${SUDO[@]}" cp "$target" "$previous"
+  had_previous=true
+fi
+"${SUDO[@]}" install -m 0644 "$temporary" "$target"
+
+if ! "${SUDO[@]}" sshd -t; then
+  if [ "$had_previous" = true ]; then
+    "${SUDO[@]}" install -m 0644 "$previous" "$target"
+  else
+    "${SUDO[@]}" rm -f "$target"
+  fi
+  exit 1
+fi
+
+"${SUDO[@]}" systemctl reload ssh.service
+"${SUDO[@]}" sshd -T | grep -E \
+  '^(permitrootlogin|allowusers|maxauthtries|x11forwarding) '
