@@ -61,5 +61,5 @@ if (output("git", ["status", "--porcelain"])) {
 run("git", ["push", "origin", branch]);
 run("ssh", [
   remoteHost,
-  `${remoteDeployRoot}/scripts/deploy-${deployTargets[service] ?? service}`,
+  `git -C ${remoteDeployRoot} pull --ff-only && ${remoteDeployRoot}/scripts/deploy-${deployTargets[service] ?? service}`,
 ]);

@@ -70,8 +70,10 @@ bun run status
 ```
 
 The app repositories wait for their image workflow and then invoke the matching
-remote deploy command. Compatibility shell wrappers remain for the previous
-`proxy`, `minisago`, `brawlstars`, `morning`, and `recipe` command names.
+remote deploy command. Deploying this operations repository first fast-forwards
+the VM checkout, then runs the selected stack command. Compatibility shell
+wrappers remain for the previous `proxy`, `minisago`, `brawlstars`, `morning`,
+and `recipe` command names.
 
 ## Scheduled Jobs
 
