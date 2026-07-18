@@ -113,7 +113,7 @@ Create production files from `env/*.env.example` under
 ```text
 proxy.env
 bot-core.env
-brawl-stars-claimer.env
+brawl-claimer.env
 recipe.env
 homepage.env
 postgres.env

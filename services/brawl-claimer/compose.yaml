@@ -17,9 +17,9 @@ services:
     labels:
       dev.hsichen.platform.managed: "true"
     env_file:
-      - /srv/platform/secrets/brawl-stars-claimer.env
+      - /srv/platform/secrets/brawl-claimer.env
     environment:
-      BRAWL_STARS_CLAIMER_ENABLED: "false"
+      BRAWL_CLAIM_ENABLED: "false"
     healthcheck:
       test:
         - CMD

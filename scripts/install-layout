@@ -16,5 +16,12 @@ if [ ! -f "$SECRETS_ROOT/bot-core.env" ] \
   cp -p "$SECRETS_ROOT/minisago.env" "$SECRETS_ROOT/bot-core.env"
 fi
 
+if [ ! -f "$SECRETS_ROOT/brawl-claimer.env" ] \
+  && [ -f "$SECRETS_ROOT/brawl-stars-claimer.env" ]; then
+  cp -p \
+    "$SECRETS_ROOT/brawl-stars-claimer.env" \
+    "$SECRETS_ROOT/brawl-claimer.env"
+fi
+
 ensure_docker_network
 ensure_docker_volumes
