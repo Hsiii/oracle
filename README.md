@@ -20,8 +20,7 @@ host, edge network, deployment tooling, or backup layout.
 
 Run `scripts/install-layout` after cloning this repository to
 `/srv/platform/operations`. It creates the runtime links, the `platform_edge`
-network, and external volumes. During migration it copies `minisago.env` to
-`bot-core.env` when the neutral file does not exist.
+network, and external volumes.
 
 ## Runtime Stacks
 
@@ -71,8 +70,8 @@ bun run status
 The app repositories wait for their image workflow and then invoke the matching
 remote deploy command. Deploying this operations repository first fast-forwards
 the VM checkout, then runs the selected stack command. Compatibility shell
-wrappers remain for the previous `proxy`, `minisago`, `brawlstars`, `morning`,
-and `recipe` command names.
+wrappers remain for the previous `proxy`, `brawlstars`, `morning`, and `recipe`
+command names.
 
 ## Scheduled Jobs
 

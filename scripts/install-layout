@@ -11,11 +11,6 @@ ln -sfn "$OPERATIONS_ROOT/edge" "$PLATFORM_ROOT/edge"
 ln -sfn "$OPERATIONS_ROOT/services" "$PLATFORM_ROOT/services"
 ln -sfn "$OPERATIONS_ROOT/jobs" "$PLATFORM_ROOT/jobs"
 
-if [ ! -f "$SECRETS_ROOT/bot-core.env" ] \
-  && [ -f "$SECRETS_ROOT/minisago.env" ]; then
-  cp -p "$SECRETS_ROOT/minisago.env" "$SECRETS_ROOT/bot-core.env"
-fi
-
 if [ ! -f "$SECRETS_ROOT/brawl-claimer.env" ] \
   && [ -f "$SECRETS_ROOT/brawl-stars-claimer.env" ]; then
   cp -p \
