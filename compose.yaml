@@ -29,6 +29,7 @@ services:
       - ../secrets/wm31.env
     environment:
       GAMER_FORUM_STATE_FILE: /app/state/gamer-forum-state.json
+      X_POST_STATE_FILE: /app/state/x-post-state.json
     volumes:
       - wm31bot-state:/app/state
     networks:
