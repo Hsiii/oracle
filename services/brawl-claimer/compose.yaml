@@ -8,7 +8,7 @@ x-logging: &default-logging
 
 services:
   brawl-claimer:
-    image: ghcr.io/hsiii/brawl-stars-store-claimer:${BRAWL_CLAIMER_IMAGE_TAG:-main}
+    image: ghcr.io/hsiii/brawl-stars-store-claimer:${BRAWL_CLAIMER_IMAGE_TAG:-sha-e17392a}
     restart: unless-stopped
     cpus: 0.5
     mem_limit: 768m
