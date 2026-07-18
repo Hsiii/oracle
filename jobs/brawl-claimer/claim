@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+job_path="$(realpath "${BASH_SOURCE[0]}")"
+source "$(dirname -- "$job_path")/../../scripts/lib/common.sh"
+
+container_id="$(compose brawl-claimer ps -q brawl-claimer)"
+container_running="$("${DOCKER[@]}" inspect -f '{{.State.Running}}' "$container_id" 2>/dev/null || true)"
+
+if [ "$container_running" != "true" ]; then
+  "$OPERATIONS_ROOT/scripts/deploy-brawl-claimer"
+fi
+
+compose brawl-claimer exec -T \
+  brawl-claimer \
+  xvfb-run -a bun src/server.ts --claim-once "$@"

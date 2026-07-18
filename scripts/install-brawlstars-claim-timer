@@ -40,10 +40,10 @@ done
 crontab "$next_cron"
 
 "${SUDO[@]}" install -m 0644 \
-  "$INFRA_ROOT/systemd/platform-brawlstars-claim.service" \
+  "$OPERATIONS_ROOT/systemd/platform-brawlstars-claim.service" \
   /etc/systemd/system/platform-brawlstars-claim.service
 "${SUDO[@]}" install -m 0644 \
-  "$INFRA_ROOT/systemd/platform-brawlstars-claim.timer" \
+  "$OPERATIONS_ROOT/systemd/platform-brawlstars-claim.timer" \
   /etc/systemd/system/platform-brawlstars-claim.timer
 "${SUDO[@]}" systemctl daemon-reload
 

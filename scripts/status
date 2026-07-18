@@ -3,4 +3,7 @@ set -euo pipefail
 
 source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
-compose_ps
+for stack in "${STACKS[@]}"; do
+  printf '\n[%s]\n' "$stack"
+  compose "$stack" ps
+done

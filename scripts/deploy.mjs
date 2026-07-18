@@ -3,6 +3,10 @@ import { execFileSync, spawnSync } from "node:child_process";
 const service = process.argv[2] ?? "all";
 const allowedServices = new Set([
   "all",
+  "edge",
+  "bot-core",
+  "brawl-claimer",
+  "recipes",
   "proxy",
   "minisago",
   "brawlstars",
@@ -13,7 +17,15 @@ const allowedServices = new Set([
 ]);
 const remoteHost = process.env.PLATFORM_HOST ?? "platform";
 const remoteDeployRoot =
-  process.env.PLATFORM_INFRA_ROOT ?? "/srv/platform/infra";
+  process.env.PLATFORM_OPERATIONS_ROOT ?? "/srv/platform/operations";
+
+const deployTargets = {
+  proxy: "edge",
+  minisago: "bot-core",
+  brawlstars: "brawl-claimer",
+  morning: "brawl-claimer",
+  recipe: "recipes",
+};
 
 function output(command, args) {
   return execFileSync(command, args, { encoding: "utf8" }).trim();
@@ -47,4 +59,7 @@ if (output("git", ["status", "--porcelain"])) {
 }
 
 run("git", ["push", "origin", branch]);
-run("ssh", [remoteHost, `${remoteDeployRoot}/scripts/deploy-${service}`]);
+run("ssh", [
+  remoteHost,
+  `${remoteDeployRoot}/scripts/deploy-${deployTargets[service] ?? service}`,
+]);

@@ -17,10 +17,12 @@
 		X-Content-Type-Options nosniff
 	}
 
+	redir /bot /bot/ 308
 	redir /brawlstars /brawlstars/ 308
 	redir /morning /brawlstars/ 308
 	redir /recipe /recipe/ 308
 	redir /videos /videos/ 308
+	redir /wm31 /bot/ 308
 
 	handle_path /videos/* {
 		root * /srv/videos
@@ -28,7 +30,7 @@
 	}
 
 	handle_path /recipe/* {
-		reverse_proxy recipe-site:3101
+		reverse_proxy recipes:3101
 	}
 
 	handle /morning/* {
@@ -36,14 +38,19 @@
 	}
 
 	handle /brawlstars/* {
-		reverse_proxy brawl-stars-claimer:3100
+		reverse_proxy brawl-claimer:3100
 	}
 
+	handle_path /bot/* {
+		reverse_proxy bot-core:3000
+	}
+
+	# Preserve existing integrations while callers move to /bot.
 	handle_path /wm31/* {
-		reverse_proxy minisago:3000
+		reverse_proxy bot-core:3000
 	}
 
 	handle {
-		reverse_proxy minisago:3000
+		reverse_proxy bot-core:3000
 	}
 }

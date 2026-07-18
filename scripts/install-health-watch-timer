@@ -11,10 +11,10 @@ fi
 
 install -d -m 0755 "$STATE_ROOT/health-watch"
 "${SUDO[@]}" install -m 0644 \
-  "$INFRA_ROOT/systemd/platform-health-watch.service" \
+  "$OPERATIONS_ROOT/systemd/platform-health-watch.service" \
   /etc/systemd/system/platform-health-watch.service
 "${SUDO[@]}" install -m 0644 \
-  "$INFRA_ROOT/systemd/platform-health-watch.timer" \
+  "$OPERATIONS_ROOT/systemd/platform-health-watch.timer" \
   /etc/systemd/system/platform-health-watch.timer
 "${SUDO[@]}" systemctl daemon-reload
 "${SUDO[@]}" systemctl enable --now platform-health-watch.timer

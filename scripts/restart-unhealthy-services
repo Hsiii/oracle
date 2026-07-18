@@ -41,4 +41,4 @@ while IFS= read -r container_id; do
   printf 'Restarting unhealthy container %s.\n' "$container_name"
   "${DOCKER[@]}" restart "$container_id" >/dev/null
   printf '%s\n' "$now" > "$marker"
-done < <("${DOCKER[@]}" compose -f "$COMPOSE_FILE" ps -q)
+done < <("${DOCKER[@]}" ps -q --filter label=dev.hsichen.platform.managed=true)

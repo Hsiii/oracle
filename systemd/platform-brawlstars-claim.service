@@ -8,8 +8,8 @@ StartLimitBurst=3
 [Service]
 Type=oneshot
 User=ubuntu
-WorkingDirectory=/srv/platform/infra
-ExecStart=/usr/bin/flock -n /tmp/platform-brawlstars-claim.lock /srv/platform/infra/scripts/claim-brawlstars-reward
+WorkingDirectory=/srv/platform/operations
+ExecStart=/usr/bin/flock -n /tmp/platform-brawlstars-claim.lock /srv/platform/jobs/brawl-claimer/claim
 TimeoutStartSec=20min
 Restart=on-failure
 RestartSec=30min

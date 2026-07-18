@@ -4,8 +4,9 @@ set -euo pipefail
 source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
 ensure_docker_network
-pull_repo "$INFRA_ROOT"
-pull_repo "$APPS_ROOT/minisago"
-pull_repo "$APPS_ROOT/morning"
-pull_repo "$APPS_ROOT/recipe"
-compose_up
+ensure_docker_volumes
+
+for stack in "${STACKS[@]}"; do
+  compose_pull "$stack"
+  compose_up "$stack"
+done

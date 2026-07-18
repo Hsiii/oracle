@@ -1,0 +1,44 @@
+name: platform-edge
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  edge:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    cpus: 0.25
+    mem_limit: 128m
+    logging: *default-logging
+    labels:
+      dev.hsichen.platform.managed: "true"
+    env_file:
+      - /srv/platform/secrets/proxy.env
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - /srv/videos:/srv/videos:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      edge:
+        aliases:
+          - edge
+
+networks:
+  edge:
+    external: true
+    name: platform_edge
+
+volumes:
+  caddy-data:
+    external: true
+    name: platform_caddy-data
+  caddy-config:
+    external: true
+    name: platform_caddy-config

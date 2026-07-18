@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
+install -d -m 0755 "$PLATFORM_ROOT"
+install -d -m 0700 "$SECRETS_ROOT" "$BACKUPS_ROOT"
+install -d -m 0755 "$STATE_ROOT"
+
+ln -sfn "$OPERATIONS_ROOT/edge" "$PLATFORM_ROOT/edge"
+ln -sfn "$OPERATIONS_ROOT/services" "$PLATFORM_ROOT/services"
+ln -sfn "$OPERATIONS_ROOT/jobs" "$PLATFORM_ROOT/jobs"
+
+if [ ! -f "$SECRETS_ROOT/bot-core.env" ] \
+  && [ -f "$SECRETS_ROOT/minisago.env" ]; then
+  cp -p "$SECRETS_ROOT/minisago.env" "$SECRETS_ROOT/bot-core.env"
+fi
+
+ensure_docker_network
+ensure_docker_volumes

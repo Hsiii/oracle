@@ -17,7 +17,7 @@ units=(
 )
 
 for unit in "${units[@]}"; do
-  "${SUDO[@]}" install -m 0644 "$INFRA_ROOT/systemd/$unit" "/etc/systemd/system/$unit"
+  "${SUDO[@]}" install -m 0644 "$OPERATIONS_ROOT/systemd/$unit" "/etc/systemd/system/$unit"
 done
 
 install -d -m 0700 "$BACKUPS_ROOT/postgres"

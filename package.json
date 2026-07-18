@@ -5,20 +5,19 @@
   "scripts": {
     "deploy": "bun scripts/deploy.mjs all",
     "deploy:all": "bun scripts/deploy.mjs all",
-    "deploy:proxy": "bun scripts/deploy.mjs proxy",
-    "deploy:minisago": "bun scripts/deploy.mjs minisago",
-    "deploy:brawlstars": "bun scripts/deploy.mjs brawlstars",
-    "deploy:morning": "bun scripts/deploy.mjs brawlstars",
-    "deploy:recipe": "bun scripts/deploy.mjs recipe",
+    "deploy:edge": "bun scripts/deploy.mjs edge",
+    "deploy:bot-core": "bun scripts/deploy.mjs bot-core",
+    "deploy:brawl-claimer": "bun scripts/deploy.mjs brawl-claimer",
+    "deploy:recipes": "bun scripts/deploy.mjs recipes",
     "deploy:homepage": "bun scripts/deploy.mjs homepage",
     "deploy:postgres": "bun scripts/deploy.mjs postgres",
-    "install:brawlstars-timer": "ssh platform /srv/platform/infra/scripts/install-brawlstars-claim-timer --enable",
-    "pause:brawlstars-timer": "ssh platform /srv/platform/infra/scripts/install-brawlstars-claim-timer --disable",
-    "claim:brawlstars": "ssh platform /srv/platform/infra/scripts/claim-brawlstars-reward",
-    "backup:postgres": "ssh platform /srv/platform/infra/scripts/backup-postgres",
-    "verify:postgres-backup": "ssh platform /srv/platform/infra/scripts/verify-postgres-backup",
-    "install:postgres-backups": "ssh platform /srv/platform/infra/scripts/install-postgres-backup-timers",
-    "install:health-watch": "ssh platform /srv/platform/infra/scripts/install-health-watch-timer",
-    "status": "ssh platform /srv/platform/infra/scripts/status"
+    "install:brawlstars-timer": "ssh platform /srv/platform/operations/scripts/install-brawlstars-claim-timer --enable",
+    "pause:brawlstars-timer": "ssh platform /srv/platform/operations/scripts/install-brawlstars-claim-timer --disable",
+    "claim:brawlstars": "ssh platform /srv/platform/jobs/brawl-claimer/claim",
+    "backup:postgres": "ssh platform /srv/platform/jobs/postgres/backup",
+    "verify:postgres-backup": "ssh platform /srv/platform/jobs/postgres/verify-backup",
+    "install:postgres-backups": "ssh platform /srv/platform/operations/scripts/install-postgres-backup-timers",
+    "install:health-watch": "ssh platform /srv/platform/operations/scripts/install-health-watch-timer",
+    "status": "ssh platform /srv/platform/operations/scripts/status"
   }
 }
