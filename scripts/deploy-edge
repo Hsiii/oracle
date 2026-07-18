@@ -5,3 +5,5 @@ source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
 compose_pull edge
 compose_up edge
+compose edge exec -T edge caddy validate --config /etc/caddy/Caddyfile
+compose edge exec -T edge caddy reload --config /etc/caddy/Caddyfile
