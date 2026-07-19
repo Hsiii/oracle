@@ -5,11 +5,8 @@ const allowedServices = new Set([
   "all",
   "edge",
   "bot-core",
-  "brawl-claimer",
   "recipes",
   "proxy",
-  "brawlstars",
-  "morning",
   "recipe",
   "homepage",
   "postgres",
@@ -20,8 +17,6 @@ const remoteDeployRoot =
 
 const deployTargets = {
   proxy: "edge",
-  brawlstars: "brawl-claimer",
-  morning: "brawl-claimer",
   recipe: "recipes",
 };
 

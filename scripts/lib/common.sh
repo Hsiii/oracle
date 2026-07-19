@@ -8,12 +8,11 @@ SECRETS_ROOT="${SECRETS_ROOT:-"$PLATFORM_ROOT/secrets"}"
 BACKUPS_ROOT="${BACKUPS_ROOT:-"$PLATFORM_ROOT/backups"}"
 STATE_ROOT="${STATE_ROOT:-"$PLATFORM_ROOT/state"}"
 NETWORK_NAME="${NETWORK_NAME:-platform_edge}"
-STACKS=(edge bot-core brawl-claimer recipes homepage postgres)
+STACKS=(edge bot-core recipes homepage postgres)
 VOLUME_NAMES=(
   platform_caddy-data
   platform_caddy-config
   platform_bot-core-state
-  brawl-stars-claimer_state
   recipe-site_uploads
   platform_postgres-data
 )

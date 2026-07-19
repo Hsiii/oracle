@@ -11,12 +11,5 @@ ln -sfn "$OPERATIONS_ROOT/edge" "$PLATFORM_ROOT/edge"
 ln -sfn "$OPERATIONS_ROOT/services" "$PLATFORM_ROOT/services"
 ln -sfn "$OPERATIONS_ROOT/jobs" "$PLATFORM_ROOT/jobs"
 
-if [ ! -f "$SECRETS_ROOT/brawl-claimer.env" ] \
-  && [ -f "$SECRETS_ROOT/brawl-stars-claimer.env" ]; then
-  cp -p \
-    "$SECRETS_ROOT/brawl-stars-claimer.env" \
-    "$SECRETS_ROOT/brawl-claimer.env"
-fi
-
 ensure_docker_network
 ensure_docker_volumes

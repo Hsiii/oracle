@@ -29,7 +29,6 @@ Each workload is an independent Docker Compose project attached to the external
 
 - `edge`: Caddy and public TLS routing.
 - `bot-core`: the current Discord bot runtime, published by MiniSago.
-- `brawl-claimer`: the Brawl Stars Store dashboard and claim runtime.
 - `recipes`: the recipe archive.
 - `homepage`: the uploaded homepage artifact.
 - `postgres`: private PostgreSQL for services that need it.
@@ -44,7 +43,6 @@ both `main` and immutable `sha-<commit>` tags:
 
 ```text
 ghcr.io/hsiii/minisago
-ghcr.io/hsiii/brawl-claim
 ghcr.io/hsiii/recipes
 ```
 
@@ -60,7 +58,6 @@ From this repository:
 bun run deploy:all
 bun run deploy:edge
 bun run deploy:bot-core
-bun run deploy:brawl-claimer
 bun run deploy:recipes
 bun run deploy:homepage
 bun run deploy:postgres
@@ -70,15 +67,13 @@ bun run status
 The app repositories wait for their image workflow and then invoke the matching
 remote deploy command. Deploying this operations repository first fast-forwards
 the VM checkout, then runs the selected stack command. Compatibility shell
-wrappers remain for the previous `proxy`, `brawlstars`, `morning`, and `recipe`
-command names.
+wrappers remain for the previous `proxy` and `recipe` command names.
 
 ## Scheduled Jobs
 
 One-shot work is separate from service definitions:
 
 ```text
-/srv/platform/jobs/brawl-claimer/claim
 /srv/platform/jobs/postgres/backup
 /srv/platform/jobs/postgres/verify-backup
 ```
@@ -87,7 +82,6 @@ Install or refresh systemd units after changing the operations checkout:
 
 ```bash
 scripts/install-health-watch-timer
-scripts/install-brawlstars-claim-timer --disable
 scripts/install-postgres-backup-timers
 ```
 
@@ -113,7 +107,6 @@ Create production files from `env/*.env.example` under
 ```text
 proxy.env
 bot-core.env
-brawl-claimer.env
 recipe.env
 homepage.env
 postgres.env

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-
-script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-printf 'Cron has been replaced by a persistent systemd timer.\n' >&2
-exec "$script_dir/install-brawlstars-claim-timer" "$@"
