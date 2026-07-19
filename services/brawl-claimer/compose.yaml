@@ -8,7 +8,7 @@ x-logging: &default-logging
 
 services:
   brawl-claimer:
-    image: ghcr.io/hsiii/brawl-claim:${BRAWL_CLAIMER_IMAGE_TAG:-sha-db44001}
+    image: ghcr.io/hsiii/brawl-claim:${BRAWL_CLAIMER_IMAGE_TAG:-sha-db73ba3}
     restart: unless-stopped
     cpus: 1.0
     mem_limit: 768m
