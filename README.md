@@ -44,7 +44,7 @@ both `main` and immutable `sha-<commit>` tags:
 
 ```text
 ghcr.io/hsiii/minisago
-ghcr.io/hsiii/brawl-stars-store-claimer
+ghcr.io/hsiii/brawl-claim
 ghcr.io/hsiii/recipes
 ```
 
