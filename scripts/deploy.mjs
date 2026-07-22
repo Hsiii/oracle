@@ -4,6 +4,7 @@ const service = process.argv[2] ?? "all";
 const allowedServices = new Set([
   "all",
   "edge",
+  "cloudflared",
   "bot-core",
   "minisago",
   "minisago-worker",
