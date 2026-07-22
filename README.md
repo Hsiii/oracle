@@ -154,10 +154,12 @@ production DNS, Clerk callbacks, OBI connections, and public health checks pass.
 
 ## Cloudflare ingress
 
-Create `/srv/sago-cloud/secrets/cloudflared.env` from the public example, then
-deploy the Tunnel separately. Configure its public hostnames in Cloudflare to
-use `http://edge:80`; `cloudflared` and Caddy share the private frontend Docker
-network. No Tunnel credential or provider token is stored in this repository.
+Create a locally managed Tunnel, then place its private files at
+`/srv/sago-cloud/secrets/cloudflared/config.yml` and
+`/srv/sago-cloud/secrets/cloudflared/credentials.json`. Start from the public
+config example and route each public hostname to `http://edge:80`;
+`cloudflared` and Caddy share the private frontend Docker network. No Tunnel
+identifier, credential, or provider token is stored in this repository.
 
 Cache only immutable Homepage assets such as `/_next/static/*`. Explicitly
 bypass `/api/*`, authenticated HTML, session-bearing responses, and private
@@ -184,7 +186,8 @@ Create production files from `env/*.env.example` under
 
 ```text
 proxy.env
-cloudflared.env
+cloudflared/config.yml
+cloudflared/credentials.json
 bot-core.env
 homepage.env
 minisago-worker-read.env

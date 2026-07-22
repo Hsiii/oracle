@@ -3,8 +3,8 @@ set -euo pipefail
 
 source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
 
-if [[ ! -s "$SECRETS_ROOT/cloudflared.env" ]]; then
-  printf 'Create %s/cloudflared.env from env/cloudflared.env.example before deploying the tunnel.\n' "$SECRETS_ROOT" >&2
+if [[ ! -s "$SECRETS_ROOT/cloudflared/config.yml" || ! -s "$SECRETS_ROOT/cloudflared/credentials.json" ]]; then
+  printf 'Create %s/cloudflared/config.yml and credentials.json before deploying the tunnel.\n' "$SECRETS_ROOT" >&2
   exit 1
 fi
 
