@@ -15,9 +15,9 @@ services:
     logging: *default-logging
     labels:
       dev.hsichen.sago-cloud.managed: "true"
-    env_file:
-      - /srv/sago-cloud/secrets/cloudflared.env
-    command: tunnel --no-autoupdate run
+    command: tunnel --no-autoupdate --config /etc/cloudflared/config.yml run
+    volumes:
+      - /srv/sago-cloud/secrets/cloudflared:/etc/cloudflared:ro
     networks:
       frontend:
         aliases:

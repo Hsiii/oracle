@@ -1,0 +1,11 @@
+tunnel: <tunnel-id>
+credentials-file: /etc/cloudflared/credentials.json
+
+ingress:
+  - hostname: <homepage-hostname>
+    service: http://edge:80
+  - hostname: <obi-hostname>
+    service: http://edge:80
+  - hostname: <bot-hostname>
+    service: http://edge:80
+  - service: http_status:404
