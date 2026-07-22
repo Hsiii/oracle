@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cleanup="$repo_root/scripts/cleanup-post-rollback"
+
+grep -Fq 'SAGO_CLOUD_ROLLBACK_CLEANUP_CONFIRMED' "$cleanup"
+grep -Fq "2026-07-25 12:42:00Z" "$cleanup"
+grep -Fq 'jobs/postgres/verify-backup' "$cleanup"
+grep -Fq 'platform_postgres-data' "$cleanup"
+grep -Fq '/home/ubuntu/arm-rehearsal /home/ubuntu/arm-cutover-final' "$cleanup"
+
+if grep -Eq 'docker system prune|volume prune' "$cleanup"; then
+  printf 'post-rollback cleanup uses a broad destructive prune\n' >&2
+  exit 1
+fi
+
+if SAGO_CLOUD_ROLLBACK_CLEANUP_CONFIRMED=no "$cleanup" >/dev/null 2>&1; then
+  printf 'post-rollback cleanup ran without explicit confirmation\n' >&2
+  exit 1
+fi
+
+printf 'post-rollback cleanup is gated and allowlisted\n'

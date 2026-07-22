@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+source "$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/lib/common.sh"
+
+if [[ "${SAGO_CLOUD_ROLLBACK_CLEANUP_CONFIRMED:-}" != "yes" ]]; then
+  printf 'Set SAGO_CLOUD_ROLLBACK_CLEANUP_CONFIRMED=yes after the rollback gate.\n' >&2
+  exit 1
+fi
+
+not_before_epoch="${SAGO_CLOUD_ROLLBACK_NOT_BEFORE_EPOCH:-$(date -u -d '2026-07-25 12:42:00Z' +%s)}"
+if (( $(date -u +%s) < not_before_epoch )); then
+  printf 'Rollback cleanup is gated until 2026-07-25 20:42 Asia/Taipei.\n' >&2
+  exit 1
+fi
+
+legacy_root=/srv/platform
+expected_root=/srv/sago-cloud
+if [[ ! -L "$legacy_root" || "$(readlink -f -- "$legacy_root")" != "$expected_root" ]]; then
+  printf 'Refusing to remove an unexpected compatibility path: %s\n' "$legacy_root" >&2
+  exit 1
+fi
+
+"$OPERATIONS_ROOT/jobs/postgres/verify-backup"
+
+mapfile -t managed_containers < <(
+  "${DOCKER[@]}" ps -aq --filter label=dev.hsichen.sago-cloud.managed=true
+)
+for container in "${managed_containers[@]}"; do
+  state="$("${DOCKER[@]}" inspect --format '{{.State.Status}} {{if .State.Health}}{{.State.Health.Status}}{{end}}' "$container")"
+  if [[ "$state" != "running" && "$state" != "running healthy" ]]; then
+    printf 'Managed container is not healthy enough for cleanup: %s (%s)\n' "$container" "$state" >&2
+    exit 1
+  fi
+done
+
+legacy_volumes=(
+  platform_caddy-data
+  platform_caddy-config
+  platform_bot-core-state
+  platform_postgres-data
+  platform_obi-data
+  platform_obi-config
+  platform_minisago-codex
+  platform_minisago-github
+  platform_minisago-state
+  platform_minisago-workspace
+)
+for volume in "${legacy_volumes[@]}"; do
+  if "${DOCKER[@]}" volume inspect "$volume" >/dev/null 2>&1; then
+    "${DOCKER[@]}" volume rm "$volume"
+  fi
+done
+
+legacy_networks=(platform_edge platform_data platform-minisago-worker_default)
+for network in "${legacy_networks[@]}"; do
+  if ! "${DOCKER[@]}" network inspect "$network" >/dev/null 2>&1; then
+    continue
+  fi
+
+  if [[ "$("${DOCKER[@]}" network inspect --format '{{len .Containers}}' "$network")" != "0" ]]; then
+    printf 'Legacy network still has attached containers: %s\n' "$network" >&2
+    exit 1
+  fi
+
+  "${DOCKER[@]}" network rm "$network"
+done
+
+if [[ "$(id -u)" -eq 0 ]]; then
+  SUDO=()
+else
+  SUDO=(sudo -n)
+fi
+
+"${SUDO[@]}" rm -rf -- /home/ubuntu/arm-rehearsal /home/ubuntu/arm-cutover-final
+"${SUDO[@]}" rm -f -- \
+  /srv/sago-cloud/secrets/brawl-claimer.env \
+  /srv/sago-cloud/secrets/recipe.env
+"${SUDO[@]}" rm -- "$legacy_root"
+"${DOCKER[@]}" image prune --force --filter dangling=true
+
+printf 'Removed allowlisted rollback resources. Rotate credentials copied into migration archives.\n'

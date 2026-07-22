@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+homepage_url="${HOMEPAGE_URL:-}"
+obi_url="${OBI_URL:-}"
+
+for url in "$homepage_url" "$obi_url"; do
+  if [[ ! "$url" =~ ^https://[^/]+/?$ ]]; then
+    printf 'Set HOMEPAGE_URL and OBI_URL to HTTPS origins before verifying public ingress.\n' >&2
+    exit 1
+  fi
+
+  curl --fail --silent --show-error --max-time 15 --output /dev/null "$url"
+  printf 'Verified public ingress: %s\n' "$url"
+done

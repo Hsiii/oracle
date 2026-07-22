@@ -75,4 +75,5 @@ compose_up() {
   ensure_docker_networks
   ensure_docker_volumes
   compose "$stack" up -d --remove-orphans
+  "${DOCKER[@]}" image prune --force --filter dangling=true >/dev/null
 }

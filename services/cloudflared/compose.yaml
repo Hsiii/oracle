@@ -1,0 +1,29 @@
+name: sago-cloud-cloudflared
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:2026.7.1
+    restart: unless-stopped
+    cpus: 0.25
+    mem_limit: 128m
+    logging: *default-logging
+    labels:
+      dev.hsichen.sago-cloud.managed: "true"
+    env_file:
+      - /srv/sago-cloud/secrets/cloudflared.env
+    command: tunnel --no-autoupdate run
+    networks:
+      frontend:
+        aliases:
+          - cloudflared
+
+networks:
+  frontend:
+    external: true
+    name: ${EDGE_NETWORK_NAME:-sago_cloud_edge}

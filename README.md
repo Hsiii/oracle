@@ -41,7 +41,9 @@ Each workload is an independent Docker Compose project. Public services attach
 to the external `sago_cloud_edge` frontend network, while PostgreSQL attaches only
 to the external `sago_cloud_data` network:
 
-- `edge`: Caddy and public TLS routing.
+- `edge`: Caddy routing, with direct public TLS retained only during Tunnel cutover.
+- `cloudflared`: optional outbound-only Cloudflare Tunnel ingress. It deploys
+  separately so merging its definition cannot cut over live traffic.
 - `bot-core`: the current Discord bot runtime, published by MiniSago.
 - `minisago-worker`: the always-on Luna/Sol Codex worker.
 - `homepage`: the multi-platform Homepage image.
@@ -80,6 +82,7 @@ From this repository:
 ```bash
 bun run deploy:all
 bun run deploy:edge
+bun run deploy:cloudflared
 bun run deploy:bot-core
 bun run deploy:minisago
 bun run deploy:minisago-worker
@@ -131,7 +134,34 @@ sshd configuration before reloading the service.
 Administrative SSH uses Tailscale. Configure the local `sago-cloud` SSH alias to
 the VM's Tailscale MagicDNS name and confirm `ssh sago-cloud` succeeds before
 running deployment or maintenance commands. Do not expose TCP 22 in the OCI
-security list; TCP 80 and 443 remain public for Caddy.
+security list. During the Cloudflare Tunnel transition, TCP 80 and 443 remain
+public for Caddy. Close both ports only after temporary Tunnel hostnames,
+production DNS, Clerk callbacks, OBI connections, and public health checks pass.
+
+## Cloudflare ingress
+
+Create `/srv/sago-cloud/secrets/cloudflared.env` from the public example, then
+deploy the Tunnel separately. Configure its public hostnames in Cloudflare to
+use `http://edge:80`; `cloudflared` and Caddy share the private frontend Docker
+network. No Tunnel credential or provider token is stored in this repository.
+
+Cache only immutable Homepage assets such as `/_next/static/*`. Explicitly
+bypass `/api/*`, authenticated HTML, session-bearing responses, and private
+wallpapers. Preserve the origin's `private` and `no-store` headers. Apply the
+single free rate-limit rule to the wallpaper-upload endpoint before considering
+broader rules.
+
+Verify the public path with:
+
+```bash
+HOMEPAGE_URL=https://homepage.example.com \
+OBI_URL=https://obi.example.com \
+  scripts/verify-public-ingress
+```
+
+After DNS is stable and direct HTTP/S ingress is closed, remove the `ports`
+mapping from `edge/compose.yaml` in the cutover PR. Keep Tailscale as the
+administrative path.
 
 ## Secrets
 
@@ -140,6 +170,7 @@ Create production files from `env/*.env.example` under
 
 ```text
 proxy.env
+cloudflared.env
 bot-core.env
 homepage.env
 minisago-worker.env
@@ -150,6 +181,21 @@ postgres.env
 Container logs rotate at 10 MB with three files retained per service. PostgreSQL
 backups retain seven daily dumps and four weekly dumps under
 `/srv/sago-cloud/backups/postgres`.
+
+## Post-rollback cleanup
+
+Compatibility resources are retained until July 25, 2026 at 20:42
+Asia/Taipei. After health and PostgreSQL restore verification, run the
+allowlisted cleanup explicitly:
+
+```bash
+SAGO_CLOUD_ROLLBACK_CLEANUP_CONFIRMED=yes scripts/cleanup-post-rollback
+```
+
+The script removes only named legacy volumes, empty legacy networks, migration
+staging paths, retired secret files, and the compatibility symlink. It never
+prunes Docker volumes. Successful Compose starts prune dangling images; tagged
+images and persistent volumes remain.
 
 ## ARM migration
 
