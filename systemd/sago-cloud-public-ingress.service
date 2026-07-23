@@ -5,8 +5,7 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-User=nobody
-Group=nogroup
+DynamicUser=true
 EnvironmentFile=/srv/sago-cloud/secrets/public-ingress.env
 ExecStart=/usr/local/libexec/sago-cloud-public-ingress/current/scripts/verify-public-ingress
 NoNewPrivileges=true
