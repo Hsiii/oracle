@@ -44,6 +44,11 @@ if [[ "$(grep -c $'\tlog' "$edge_caddyfile")" -ne 3 ]]; then
 fi
 
 grep -Fq 'EnvironmentFile=/srv/sago-cloud/secrets/public-ingress.env' "$public_ingress_service"
+grep -Fq 'DynamicUser=true' "$public_ingress_service"
+if grep -Eq '^(User|Group)=' "$public_ingress_service"; then
+  printf 'Public ingress verification must not share a persistent service account\n' >&2
+  exit 1
+fi
 grep -Fq 'ExecStart=/usr/local/libexec/sago-cloud-public-ingress/current/scripts/verify-public-ingress' \
   "$public_ingress_service"
 grep -Fq 'OnUnitActiveSec=5min' "$public_ingress_timer"
